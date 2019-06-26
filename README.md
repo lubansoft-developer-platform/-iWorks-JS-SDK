@@ -1,1 +1,1 @@
-# -iWorks-JS-SDK
+# iWorks-JS-SDK
