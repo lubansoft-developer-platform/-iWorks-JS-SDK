@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>表单列表</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/element-ui.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="main">
+            <div class="tabList">
+                <el-button icon="el-icon-plus" @click="addShow">添加预警表单</el-button>
+                <el-button icon="el-icon-message-solid" disabled>添加消警表单</el-button>
+                <el-button icon="el-icon-refresh-left" disabled>撤销</el-button>
+                <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" :border="true" 
+                    style="width: 100%;margin-top: 10px;" @selection-change="handleSelectionChange">
+                    <el-table-column prop="data1" label="序号" width="80" align="center">
+                    </el-table-column>
+                    <el-table-column prop="data2" label="类型" align="center">
+                    </el-table-column>
+                    <el-table-column prop="data3" label="表单名称" align="center">
+                    </el-table-column>
+                    <el-table-column prop="data4" label="状态"  align="center">
+                    </el-table-column>
+                    <el-table-column prop="data5" label="添加人"  align="center">
+                    </el-table-column>
+                    <el-table-column prop="data6" label="发起时间" min-width="160" align="center">
+                    </el-table-column>
+                    <el-table-column prop="data7" label="操作"  align="center">
+                    </el-table-column>
+                </el-table>
+            </div>
+
+        </div>
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script src="js/element-ui.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                searchForm: {
+                    position: '',
+                    name: ''
+                },
+                tableData: [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],
+                multipleSelection: [],
+                currentPage: 1,
+                addPointDialog: false,
+                addPointForm: {
+                    position: '1',
+                    name: '',
+                    motorPosition: '',
+                },
+                motorPosition: false,
+            }
+        },
+        methods: {
+            handleSelectionChange(val) {
+
+            },
+            addShow() {
+                this.$alert('预警流程表单为空，请先配置表单', '提示', {confirmButtonText: '确定'});
+            },
+        },
+    })
+</script>
+
+</html>

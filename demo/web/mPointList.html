@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>测点列管理</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
+    <link rel="stylesheet" href="css/element-ui.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body style="background: #fff;">
+    <div id="app">
+        <div class="main">
+            <div class="search-form">
+                <el-form :inline="true" :model="searchForm" class="demo-form-inline" size="mini">
+                    <el-form-item label="位置：">
+                        <el-select v-model="searchForm.position" multiple placeholder="请选择">
+                            <el-option label="主塔" value="1"></el-option>
+                            <el-option label="主梁" value="2"></el-option>
+                            <el-option label="斜拉索" value="3"></el-option>
+                            <el-option label="主墩" value="4"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item style="float: right;">
+                        <el-input placeholder="请输入测点名称等关键字" v-model="searchForm.name">
+                            <el-button slot="append" icon="el-icon-search"></el-button>
+                        </el-input>
+                    </el-form-item>
+                </el-form>
+            </div>
+
+            <div class="tabList">
+                <el-button icon="el-icon-plus" @click="addPointShow">添加</el-button>
+                <el-button icon="el-icon-delete" :disabled="multipleSelection.length==0" @click="delPoint">删除
+                </el-button>
+                <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" :border="true" size="mini" style="width: 100%;margin-top: 10px;" @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" prop="id" width="55" align="center">
+                    </el-table-column>
+                    <el-table-column type="index" :index="indexMethod" label="序号" width="60" align="center">
+                    </el-table-column>
+                    <el-table-column prop="name" label="测点名称" min-width="160" sortable align="center">
+                    </el-table-column>
+                    <el-table-column prop="position" label="监控位置" align="center">
+                    </el-table-column>
+                    <el-table-column label="编辑" min-width="60" align="center">
+                        <template slot-scope="scope"><i class="el-icon-edit"
+                                @click="openEditDiolag(scope.row)"></i></template>
+                    </el-table-column>
+                    <el-table-column label="反查详情" min-width="70" align="center">
+                        <template slot-scope="scope"><i class="el-icon-location"
+                                @click="openFindDiolag(scope.row)"></i></template>
+                    </el-table-column>
+                    <el-table-column prop="time" label="更新时间" min-width="120" align="center">
+                    </el-table-column>
+                </el-table>
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 30]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="tableData.length" style="text-align: right;margin-top: 10px;">
+                </el-pagination>
+            </div>
+
+        </div>
+
+        <el-dialog title="添加测点" :visible.sync="addPointDialog" width="50%">
+            <el-form ref="form" :rules="addPointRules" :model="addPointForm" label-width="80px" size="mini">
+                <el-form-item label="测点名称" prop="name">
+                    <el-input v-model="addPointForm.name" maxlength="15" placeholder="最多输入15字"></el-input>
+                </el-form-item>
+                <el-form-item label="监控部位" prop="position">
+                    <el-select v-model="addPointForm.position">
+                        <el-option label="主塔" value="主塔"></el-option>
+                        <el-option label="主梁" value="主梁"></el-option>
+                        <el-option label="斜拉索" value="斜拉索"></el-option>
+                        <el-option label="主墩" value="主墩"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button @click="selectPosition">选择位置</el-button>
+                    <span style="color: red;" v-if="addPointForm.motorPosition==''">未选定</span>
+                    <span style="color: red;" v-if="addPointForm.motorPosition!=''">已选定</span>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="addPointSubmit">确 定</el-button>
+                <el-button @click="addPointCancel">取 消</el-button>
+            </span>
+        </el-dialog>
+    </div>
+</body>
+<!-- <script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
+<script src="js/vue.js"></script>
+<script src="js/element-ui.js"></script>
+<script src="js/moment.min.js"></script>
+<script type='text/javascript' src='sdk/lbsdk.min.js'></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                searchForm: {
+                    position: ['1', '2', '3', '4'],
+                    name: ''
+                },
+                tableData: [],
+                multipleSelection: [],
+                currentPage: 1,
+                addPointDialog: false,
+                addPointForm: {
+                    position: '主塔',
+                    name: '',
+                    motorPosition: '',
+                },
+                addPointRules: {
+                    name: [{
+                        required: true,
+                        message: '请输入测点名称',
+                        trigger: 'blur'
+                    }, {
+                        min: 1,
+                        max: 15,
+                        message: '最多输入15字',
+                        trigger: 'blur'
+                    }],
+                    position: [{
+                        required: true,
+                        message: '请选择监控部位',
+                        trigger: 'change'
+                    }],
+                },
+                motorPosition: false,
+                testNote: '哈哈哈',
+            }
+        },
+        mounted() {
+            //初始数据
+            //this.setLocalStorage();
+            //初始化本地测点列表
+            if (localStorage.getItem("pointList")) {
+                this.tableData = JSON.parse(localStorage.getItem("pointList"));
+            }
+            let _this = this;
+
+            initRecvdMsgCallback(funRecvdMsgCallBack, function(bRet) {
+                if (bRet === true) {
+                    let imagePaths = [{
+                        ImageDir: [{
+                            DirPath: '/HelloWorld/web/img', //图片目录
+                            PinMark: '新增测点' //图钉标识  用于区分同类型下不同状态图片  例如： 初始化Orig、 已整改Done......
+                        }],
+                        PinType: '1' //图钉类型
+                    }]
+                    setPinImagePath(JSON.stringify(imagePaths));
+                    //添加图钉
+                    getAllPinInfo(function(funcRet) {
+                        funcRet = JSON.parse(funcRet);
+                        _this.tableData.forEach(item => {
+                            let arr = funcRet.find(item2 => item2.Id == item.motorPosition.Id);
+                            if (item.motorPosition && !arr) {
+                                //console.log(item.motorPosition,'item.motorPosition');
+                                addPin(JSON.stringify(item.motorPosition), function(
+                                    returnValue) {
+                                    //console.log(returnValue,'图钉');
+                                })
+                            }
+                        });
+                    })
+                }
+            });
+            // initRecvdMsgCallback();
+            // //注册回调消息
+            // function initRecvdMsgCallback() {
+            //     try {
+            //         if (typeof contextObj !== "undefined") {
+            //             if (typeof setRecvdMsgCallBack !== "undefined") {
+            //                 //alert("setRecvdMsgCallBack");
+            //                 setRecvdMsgCallBack(funRecvdMsgCallBack);
+            //                 let imagePaths = [{
+            //                     ImageDir: [{
+            //                         DirPath: 'C:/Users/hggg/AppData/Local/iWorks/Extensions/HelloWorld/web/img', //图片目录
+            //                         PinMark: '新增测点' //图钉标识  用于区分同类型下不同状态图片  例如： 初始化Orig、 已整改Done......
+            //                     }],
+            //                     PinType: '1' //图钉类型
+            //                 }]
+            //                 setPinImagePath(JSON.stringify(imagePaths));
+            //                 //添加图钉
+            //                 getAllPinInfo(function(funcRet) {
+            //                     funcRet = JSON.parse(funcRet);
+            //                     _this.tableData.forEach(item => {
+            //                         let arr = funcRet.find(item2 => item2.Id == item.motorPosition.Id);
+            //                         if (item.motorPosition && !arr) {
+            //                             //console.log(item.motorPosition,'item.motorPosition');
+            //                             addPin(JSON.stringify(item.motorPosition), function(
+            //                                 returnValue) {
+            //                                 //console.log(returnValue,'图钉');
+            //                             })
+            //                         }
+            //                     });
+            //                 })
+            //             } else {
+            //                 setTimeout(initRecvdMsgCallback, 500);
+            //             }
+            //         } else {
+            //             setTimeout(initRecvdMsgCallback, 500);
+            //         }
+            //     } catch (e) {
+            //         alert(e);
+            //     }
+            // }
+
+            //接收窗口关闭信息并刷新页面
+            function funRecvdMsgCallBack(commandName, eventInfo) {
+                //console.log(commandName + '--***--' + eventInfo);
+                if (localStorage.getItem("pointList")) {
+                    _this.tableData = JSON.parse(localStorage.getItem("pointList"));
+                }
+                if (eventInfo !== '') {
+                    eventInfo = JSON.parse(eventInfo);
+                    if (eventInfo.EventType == '11' && eventInfo.dialogId == 'k3') {
+                        showWebView("k1", true, function(_dialogId, _bRet) {});
+                        getAllPinInfo(function(funcRet) {
+                            funcRet = JSON.parse(funcRet);
+                            //console.log(funcRet);
+                            funcRet.forEach(item => {
+                                setPinHighLight(item.Type, item.Id, false, function(
+                                    returnValue) {});
+                            });
+                        })
+                    }
+                }
+            }
+        },
+        methods: {
+            //打开反查模型弹框
+            openFindDiolag(row) {
+                //console.log(row);
+                getAllPinInfo(function(funcRet) {
+                    funcRet = JSON.parse(funcRet);
+                    console.log(funcRet);
+                    funcRet.forEach(item => {
+                        if (item.Id !== row.motorPosition.Id) {
+                            setPinHighLight(item.Type, item.Id, false, function(
+                                returnValue) {});
+                        }
+                    });
+                })
+                setPinHighLight(row.motorPosition.Type, row.motorPosition.Id, true, function(returnValue) {
+                    console.log(returnValue, '高亮图钉');
+                });
+                localStorage.setItem("currentPointId", row.id);
+                let url = '/HelloWorld/web/mPointInfo.html';
+                let crViewParam = {
+                    dialogId: "k3",
+                    url: url,
+                    titleName: "测点编辑",
+                    width: 600,
+                    height: 800,
+                    posLeft: 10,
+                    posTop: 165,
+                    bModalDialog: true,
+                    bShow: true,
+                };
+                ///< 打开对话框
+                createWebView(crViewParam, function() {});
+                showWebView("k1", false, function(_dialogId, _bRet) {});
+            },
+            //测点添加提交
+            addPointSubmit() {
+                if (this.addPointForm.name == '') {
+                    this.$message.error('请填写名称');
+                    return false;
+                }
+                if (this.addPointForm.motorPosition == '') {
+                    this.$message.error('请选定位置');
+                    return false;
+                }
+                let data = {
+                    id: Math.floor(Math.random(0, 1) * 1000000000),
+                    name: this.addPointForm.name,
+                    position: this.addPointForm.position,
+                    time: moment().format("YYYY/MM/DD HH:mm:ss"),
+                    motorPosition: this.addPointForm.motorPosition
+                };
+                this.tableData.unshift(data);
+                this.setLocalStorage();
+                this.addPointDialog = false;
+            },
+            //选择测点
+            selectPosition() {
+                if (this.addPointForm.name == '') {
+                    this.$message.error('请先填写测点名称');
+                    return false;
+                }
+                let _this = this;
+                showWebView("k1", false, function(_dialogId, _bRet) {
+                    captureViewPoint(function(point) {
+                        // let imagePaths = [{
+                        //     ImageDir: [{
+                        //         DirPath: 'C:/Users/hggg/AppData/Local/iWorks/Extensions/HelloWorld/web/img',//图片目录
+                        //         PinMark: '新增测点' //图钉标识  用于区分同类型下不同状态图片  例如： 初始化Orig、 已整改Done......
+                        //     }],
+                        //     PinType: '1' //图钉类型
+                        // }]
+                        // setPinImagePath(JSON.stringify(imagePaths));
+                        point = JSON.parse(point);
+                        let pin = {
+                            Id: String(Math.floor(Math.random(0, 1) *
+                                1000000000)), //图钉id，唯一标识
+                            Type: '1', //图形类型
+                            Text: _this.addPointForm.name, //图钉名称
+                            PinMark: '新增测点', //图钉标识
+                            Image: 'pin.png', //图钉对应图片
+                            posX: point.x, //图钉位置信息 x坐标
+                            posY: point.y, //图钉对应图片 y坐标
+                            posZ: point.z, //图钉对应图片 z坐标
+                        }
+                        _this.addPointForm.motorPosition = pin;
+                        //添加图钉
+                        addPin(JSON.stringify(pin), function(returnValue) {
+                            getAllPinInfo(function(funcRet) {
+                                console.log(returnValue, funcRet, '添加图钉');
+                            })
+                        })
+                        showWebView("k1", true, function(_dialogId, _bRet) {});
+                    });
+                });
+
+            },
+            //测点添加弹窗关闭
+            addPointCancel() {
+                if (this.addPointForm.motorPosition != '') {
+                    //删除图钉
+                    delPin(this.addPointForm.motorPosition.Type, this.addPointForm.motorPosition.Id, function(
+                        returnValue) {
+                        console.log(returnValue, 'returnValue');
+                    });
+                }
+                this.addPointDialog = false;
+            },
+            //打开测点编辑弹框
+            openEditDiolag(row) {
+                localStorage.setItem("currentPointId", row.id);
+                let url = '/HelloWorld/web/mPointEdit.html';
+                let crViewParam = {
+                    dialogId: "k2",
+                    url: url,
+                    titleName: row.name,
+                    width: 1000,
+                    height: 700,
+                    posLeft: 300,
+                    posTop: 100,
+                    bModalDialog: true,
+                    bShow: true,
+                };
+                ///< 打开对话框
+                createWebView(crViewParam, function() {});
+            },
+            //序号规则
+            indexMethod(index) {
+                return index + 1;
+            },
+            //列选择
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            //删除列
+            delPoint() {
+                let len = this.tableData.length;
+                let _this = this;
+                for (let i = len - 1; i >= 0; i--) {
+                    this.multipleSelection.forEach(function(item, key) {
+                        if (item.id == _this.tableData[i].id) {
+                            _this.tableData.splice(i, 1);
+                        }
+                    })
+                };
+                this.setLocalStorage();
+            },
+            //分页
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+            },
+            //分页
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+            },
+            //添加测点弹框打开
+            addPointShow() {
+                this.addPointForm = {
+                    position: '主塔',
+                    name: '',
+                    motorPosition: '',
+                };
+                this.addPointDialog = true;
+            },
+            //刷新当前页面
+            refresh() {
+                location.reload();
+            },
+            //储存测点信息到本地
+            setLocalStorage() {
+                let pointList = JSON.stringify(this.tableData);
+                localStorage.setItem("pointList", pointList);
+            },
+
+        },
+    })
+</script>
+
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>测点信息编辑</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/element-ui.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body style="background: #fff;">
+    <div id="app">
+        <div class="main">
+            <div class="edit-1">
+                <div class="edit-1-header">
+                    <span>测点基础信息</span>
+                    <template v-if="pEditStatus">
+                        <el-button size="mini" plain style="float: right" @click="pEditCancel">取消</el-button>
+                        <el-button size="mini" plain style="float: right;margin-right: 10px;" @click="pEditSubmit">保存
+                        </el-button>
+                    </template>
+                    <template v-if="!pEditStatus">
+                        <el-button size="mini" plain style="float: right" @click="pEdit">编辑</el-button>
+                    </template>
+                </div>
+                <div class="edit-1-body">
+                    <div style="width: 280px;display: inline-block;">
+                        测点名称：
+                        <template v-if="pEditStatus">
+                            <el-input v-model="info.name" maxlength="15" placeholder="请输入测点名称" size="mini"
+                                style="width: 150px;">
+                            </el-input>
+                        </template>
+                        <template v-if="!pEditStatus">{{info.name}}</template>
+                    </div>
+                    <div style="width: 280px;display: inline-block;">
+                        监控部位：{{info.position}}
+                    </div>
+                    <div style="margin-top: 5px;">
+                        <el-button size="mini" @click="selectPosition" plain :disabled="!pEditStatus">选择位置</el-button>
+                        <span class="color-green">已选定</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="edit-1" style="margin-top: 20px;">
+                <div class="edit-1-header">
+                    <span>监测数据（注：发动手动预警的数据（含历史数据）会被锁定，取消预消警方可编辑）</span>
+                    <el-button size="mini" plain style="float: right" @click="updateCancel">放弃修改</el-button>
+                    <el-button size="mini" plain style="float: right;margin-right: 10px;" @click="updateSubmit">保存修改</el-button>
+                </div>
+                <div class="tabList">
+                    <el-button icon="el-icon-plus" @click="addTr">添加行</el-button>
+                    <el-button icon="el-icon-delete" @click="delTr">删除行</el-button>
+                    <div style="display: inline-block;float: right;">
+                        <el-checkbox v-model="dateChecked">不限</el-checkbox>
+                        日期：
+                        <el-date-picker v-model="dateSelected" type="daterange" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" size="mini" :disabled="dateChecked">
+                        </el-date-picker>
+                    </div>
+                    <el-tabs type="border-card" v-model="typeSelect">
+                        <el-tab-pane label="沉降" name="1">
+                            <el-table ref="multipleTable" :data="tableData1" tooltip-effect="dark" :border="true" size="mini" style="width: 100%;" @selection-change="handleSelectionChange">
+                                <el-table-column type="selection" width="55" align="center">
+                                </el-table-column>
+                                <el-table-column label="施工工序" width="120" align="center">
+                                    <template slot-scope="scope">
+                                        <el-select v-model="scope.row.data1" placeholder=" " size="mini">
+                                            <el-option v-for="item in procedureList" :key="item.procedure"
+                                                :label="item.procedure" :value="item.procedure">
+                                            </el-option>
+                                        </el-select>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="日期" width="120" align="center">
+                                    <template slot-scope="scope">
+                                        <el-date-picker
+                                            v-model="scope.row.data2"  size="mini"
+                                            type="date"
+                                            placeholder="">
+                                        </el-date-picker>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="时间" width="120" align="center">
+                                    <template slot-scope="scope">
+                                        <el-time-select v-model="scope.row.data3"   size="mini"
+                                        :picker-options="{start: '00:00',step: '00:60',end: '23:00'}" placeholder="">
+                                        </el-time-select>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="1" width="300" align="center">
+                                    <el-table-column label="初始值(m)" width="100" align="center">
+                                        <template slot-scope="scope">
+                                            <el-input v-model="scope.row.data4_1" maxlength="15" placeholder="" size="mini"></el-input>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="测量值(m)" width="100" align="center">
+                                        <template slot-scope="scope">
+                                                    <el-input v-model="scope.row.data4_2" maxlength="15" placeholder="" size="mini"></el-input>
+                                                </template>
+                                    </el-table-column>
+                                    <el-table-column label="沉降(m)" width="100" align="center">
+                                        <template slot-scope="scope">{{scope.row.data4_1-scope.row.data4_2}}</template>
+                                    </el-table-column>
+                                </el-table-column>
+                                <el-table-column label="2" width="300" align="center">
+                                    <el-table-column prop="data5_1" label="初始值(m)" width="100" align="center">
+                                        <template slot-scope="scope">
+                                                    <el-input v-model="scope.row.data5_1" maxlength="15" placeholder="" size="mini"></el-input>
+                                                </template>
+                                    </el-table-column>
+                                    <el-table-column prop="data5_2" label="测量值(m)" width="100" align="center">
+                                        <template slot-scope="scope">
+                                                    <el-input v-model="scope.row.data5_2" maxlength="15" placeholder="" size="mini"></el-input>
+                                                </template>
+                                    </el-table-column>
+                                    <el-table-column label="沉降(m)" width="100" align="center">
+                                        <template slot-scope="scope">{{scope.row.data5_1-scope.row.data5_2}}</template>
+                                    </el-table-column>
+                                </el-table-column>
+                                <el-table-column label="3" width="300" align="center">
+                                    <el-table-column prop="data6_1" label="初始值(m)" width="100" align="center">
+                                        <template slot-scope="scope">
+                                                    <el-input v-model="scope.row.data6_1" maxlength="15" placeholder="" size="mini"></el-input>
+                                                </template>
+                                    </el-table-column>
+                                    <el-table-column prop="data6_2" label="测量值(m)" width="100" align="center">
+                                        <template slot-scope="scope">
+                                                    <el-input v-model="scope.row.data6_2" maxlength="15" placeholder="" size="mini"></el-input>
+                                                </template>
+                                    </el-table-column>
+                                    <el-table-column label="沉降(m)" width="100" align="center">
+                                        <template slot-scope="scope">{{scope.row.data6_1-scope.row.data6_2}}</template>
+                                    </el-table-column>
+                                </el-table-column>
+                                <el-table-column label="4" width="300" align="center">
+                                    <el-table-column prop="data7_1" label="初始值(m)" width="100" align="center">
+                                        <template slot-scope="scope">
+                                                    <el-input v-model="scope.row.data7_1" maxlength="15" placeholder="" size="mini"></el-input>
+                                                </template>
+                                    </el-table-column>
+                                    <el-table-column prop="data7_2" label="测量值(m)" width="100" align="center">
+                                        <template slot-scope="scope">
+                                                    <el-input v-model="scope.row.data7_2" maxlength="15" placeholder="" size="mini"></el-input>
+                                                </template>
+                                    </el-table-column>
+                                    <el-table-column label="沉降(m)" width="100" align="center">
+                                        <template slot-scope="scope">{{scope.row.data7_1-scope.row.data7_2}}</template>
+                                    </el-table-column>
+                                </el-table-column>
+                                <el-table-column label="预警级别" width="120" align="center">
+                                    <template slot-scope="scope">
+                                            <el-select v-model="scope.row.data8" placeholder=" " size="mini">
+                                                <el-option v-for="item in levelList" :key="item.value"
+                                                    :label="item.value" :value="item.value">
+                                                </el-option>
+                                            </el-select>
+                                        </template>
+                                </el-table-column>
+                            </el-table>
+                        </el-tab-pane>
+                        <el-tab-pane label="应力" name="2">
+                            <el-table ref="multipleTable" :data="tableData2" tooltip-effect="dark" :border="true" size="mini" style="width: 100%;" @selection-change="handleSelectionChange">
+                                <el-table-column type="selection" width="55" align="center">
+                                </el-table-column>
+                                <el-table-column prop="data1" label="施工工序" width="120" align="center">
+                                </el-table-column>
+                                <el-table-column prop="data2" label="日期" width="120" align="center">
+                                </el-table-column>
+                                <el-table-column prop="data3" label="时间" width="120" align="center">
+                                </el-table-column>
+                                <el-table-column label="内侧" width="330" align="center">
+                                    <el-table-column label="1" width="330" align="center">
+                                        <el-table-column prop="data4_1" label="理论值(MPa)" width="110" align="center">
+                                        </el-table-column>
+                                        <el-table-column prop="data4_2" label="实测值(MPa)" width="110" align="center">
+                                        </el-table-column>
+                                        <el-table-column prop="data4_3" label="误差(MPa)" width="110" align="center">
+                                        </el-table-column>
+                                    </el-table-column>
+                                </el-table-column>
+                                <el-table-column label="内侧" width="330" align="center">
+                                    <el-table-column label="2" width="330" align="center">
+                                        <el-table-column prop="data5_1" label="理论值(MPa)" width="110" align="center">
+                                        </el-table-column>
+                                        <el-table-column prop="data5_2" label="实测值(MPa)" width="110" align="center">
+                                        </el-table-column>
+                                        <el-table-column prop="data5_3" label="误差(MPa)" width="110" align="center">
+                                        </el-table-column>
+                                    </el-table-column>
+                                </el-table-column>
+                                <el-table-column label="外侧" width="330" align="center">
+                                    <el-table-column label="3" width="330" align="center">
+                                        <el-table-column prop="data6_1" label="理论值(MPa)" width="110" align="center">
+                                        </el-table-column>
+                                        <el-table-column prop="data6_2" label="实测值(MPa)" width="110" align="center">
+                                        </el-table-column>
+                                        <el-table-column prop="data6_3" label="误差(MPa)" width="110" align="center">
+                                        </el-table-column>
+                                    </el-table-column>
+                                </el-table-column>
+                                <el-table-column label="外侧" width="330" align="center">
+                                    <el-table-column label="4" width="330" align="center">
+                                        <el-table-column prop="data7_1" label="理论值(MPa)" width="110" align="center">
+                                        </el-table-column>
+                                        <el-table-column prop="data7_2" label="实测值(MPa)" width="110" align="center">
+                                        </el-table-column>
+                                        <el-table-column prop="data7_3" label="误差(MPa)" width="110" align="center">
+                                        </el-table-column>
+                                    </el-table-column>
+                                </el-table-column>
+                                <el-table-column prop="data8" label="预警级别" width="120" align="center">
+                                </el-table-column>
+                            </el-table>
+                        </el-tab-pane>
+                        <el-tab-pane label="塔偏" name="3">
+                            <el-table ref="multipleTable" :data="tableData3" tooltip-effect="dark" :border="true" size="mini" style="width: 100%;" @selection-change="handleSelectionChange">
+                                <el-table-column type="selection" width="55" align="center">
+                                </el-table-column>
+                                <el-table-column prop="data1" label="施工工序" width="120" align="center">
+                                </el-table-column>
+                                <el-table-column prop="data2" label="日期" width="120" align="center">
+                                </el-table-column>
+                                <el-table-column prop="data3" label="时间" width="120" align="center">
+                                </el-table-column>
+                                <el-table-column label="1" width="" align="center">
+                                    <el-table-column prop="data4" label="轴线偏位(m)" width="" align="center">
+                                    </el-table-column>
+                                </el-table-column>
+                                <el-table-column label="2" width="" align="center">
+                                    <el-table-column prop="data5" label="轴线偏位(m)" width="" align="center">
+                                    </el-table-column>
+                                </el-table-column>
+                                <el-table-column prop="data8" label="预警级别" width="" align="center">
+                                </el-table-column>
+                            </el-table>
+                        </el-tab-pane>
+                    </el-tabs>
+
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script src="js/element-ui.js"></script>
+<script src="js/api.js"></script>
+<script type='text/javascript' src='sdk/lbsdk.min.js'></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                searchForm: {
+                    position: '',
+                    name: ''
+                },
+                info: {},
+                oldInfo: {},
+                tableData1: [],
+                oldTableData1: [],
+                tableData2: [{}],
+                tableData3: [{}],
+                dateChecked: true,
+                dateSelected: '',
+                typeSelect: '1',
+
+                pEditStatus: false,
+                currentPointId: 0,
+                pointList: [],
+                procedureList: [],
+                levelList: [{
+                    value: '正常'
+                }, {
+                    value: '黄色'
+                }, {
+                    value: '红色'
+                }],
+                multipleSelection: [],
+            }
+        },
+        mounted() {
+            //初始化本地工序序号列表
+            if (localStorage.getItem("procedureList")) {
+                this.procedureList = JSON.parse(localStorage.getItem("procedureList"));
+            } else {
+                this.procedureList = procedureList;
+            }
+            //获取当前打开的测点ID
+            this.currentPointId = localStorage.getItem("currentPointId");
+            let _this = this;
+            initRecvdMsgCallback(funRecvdMsgCallBack, function(bRet) {
+                if (bRet === true) {}
+            });
+            // initRecvdMsgCallback();
+            this.loading();
+            // //注册回调消息
+            // function initRecvdMsgCallback() {
+            //     try {
+            //         if (typeof contextObj !== "undefined") {
+            //             if (typeof setRecvdMsgCallBack !== "undefined") {
+            //                 //alert("setRecvdMsgCallBack");
+            //                 setRecvdMsgCallBack(funRecvdMsgCallBack);
+            //             } else {
+            //                 setTimeout(initRecvdMsgCallback, 500);
+            //             }
+            //         } else {
+            //             setTimeout(initRecvdMsgCallback, 500);
+            //         }
+            //     } catch (e) {
+            //         alert(e);
+            //     }
+            // }
+
+            function funRecvdMsgCallBack(commandName, eventInfo) {
+                //_this.$message.error(commandName+'----'+eventInfo);
+                //_this.$message.error(localStorage.getItem("currentPointId"));
+            }
+        },
+        methods: {
+            //监测数据编辑添加
+            updateSubmit() {
+                this.info.tableData1 = this.tableData1;
+                this.pointList.forEach(item => {
+                    if (item.id == this.currentPointId) {
+                        item = this.info;
+                    }
+                });
+                this.oldTableData1 = JSON.parse(JSON.stringify(this.tableData1));
+                this.setLocalStorage();
+                this.$message({
+                    message: '保存成功',
+                    type: 'success'
+                });
+            },
+            //监测数据取消修改
+            updateCancel() {
+                this.tableData1 = JSON.parse(JSON.stringify(this.oldTableData1));
+            },
+            //添加监测数据行
+            addTr() {
+                let data = {
+                    id: Math.floor(Math.random(0, 1) * 1000000000),
+                    data1: '',
+                    data2: new Date(),
+                    data3: '',
+                    data4_1: '',
+                    data4_2: '',
+                    data5_1: '',
+                    data5_2: '',
+                    data6_1: '',
+                    data6_2: '',
+                    data7_1: '',
+                    data7_2: '',
+                    data8: '正常',
+                }
+                this.tableData1.push(data);
+            },
+            //删除监测数据行
+            delTr() {
+                let len = this.tableData1.length;
+                let _this = this;
+                for (let i = len - 1; i >= 0; i--) {
+                    this.multipleSelection.forEach(function(item, key) {
+                        if (item.id == _this.tableData1[i].id) {
+                            _this.tableData1.splice(i, 1);
+                        }
+                    })
+                };
+            },
+            //测点编辑信息初始化
+            loading() {
+                this.pointList = JSON.parse(localStorage.getItem("pointList"));
+                this.pointList.forEach(item => {
+                    if (item.id == this.currentPointId) {
+                        this.info = item;
+                    }
+                });
+                this.tableData1 = this.info.tableData1 ? this.info.tableData1 : [];
+                this.oldTableData1 = JSON.parse(JSON.stringify(this.tableData1));
+                //this.$message.error(this.currentPointId);
+            },
+            //测点信息编辑
+            pEdit() {
+                this.oldInfo = JSON.parse(JSON.stringify(this.info));
+                this.pEditStatus = true;
+            },
+            //测点信息编辑提交
+            pEditSubmit() {
+                if (this.info.name.length == 0) {
+                    this.$message({
+                        message: '名称不能为空',
+                        type: 'warning'
+                    });
+                } else {
+                    this.pointList.forEach(item => {
+                        if (item.id == this.currentPointId) {
+                            item = this.info;
+                        }
+                    });
+                    this.setLocalStorage();
+                    this.pEditStatus = false;
+                }
+            },
+            //测点信息编辑取消
+            pEditCancel() {
+                this.info = JSON.parse(JSON.stringify(this.oldInfo));
+                this.pEditStatus = false;
+            },
+            //重新选择位置
+            selectPosition() {
+                if (this.info.name == '') {
+                    this.$message.error('请先填写测点名称');
+                    return false;
+                }
+                let _this = this;
+                showWebView("k2", false, function() {});
+                showWebView("k1", false, function() {
+                    captureViewPoint(function(point) {
+                        let imagePaths = [{
+                            ImageDir: [{
+                                DirPath: '/HelloWorld/web/img/pin.png', //图片目录
+                                PinMark: '新增测点' //图钉标识  用于区分同类型下不同状态图片  例如： 初始化Orig、 已整改Done......
+                            }],
+                            PinType: '1' //图钉类型
+                        }]
+                        setPinImagePath(JSON.stringify(imagePaths));
+                        point = JSON.parse(point);
+                        let pin = {
+                            Id: String(Math.floor(Math.random(0, 1) *
+                                1000000000)), //图钉id，唯一标识
+                            Type: '1', //图形类型
+                            Text: _this.info.name, //图钉名称
+                            PinMark: '新增测点', //图钉标识
+                            Image: 'pin.png', //图钉对应图片
+                            posX: point.x, //图钉位置信息 x坐标
+                            posY: point.y, //图钉对应图片 y坐标
+                            posZ: point.z, //图钉对应图片 z坐标
+                        }
+                        _this.info.motorPosition = pin;
+                        //添加图钉
+                        addPin(JSON.stringify(pin), function(returnValue) {
+                            getAllPinInfo(function(funcRet) {
+                                console.log(returnValue, funcRet, '添加图钉');
+                            })
+                        })
+                        showWebView("k1", true, function() {});
+                        showWebView("k2", true, function() {});
+                    });
+                });
+
+            },
+            //选择监测数据列
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            //刷新
+            refresh() {
+                location.reload();
+            },
+            //储存测点信息到本地
+            setLocalStorage() {
+                let pointList = JSON.stringify(this.pointList);
+                localStorage.setItem("pointList", pointList);
+            },
+        },
+    })
+</script>
+
+</html>

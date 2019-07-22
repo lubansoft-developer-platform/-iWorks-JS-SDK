@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>测点反查信息</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/element-ui.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="main">
+            <div style="">
+                <table class="infoTable" cellspacing="0" cellpadding="0">
+                    <tr class="tr-header">
+                        <td colspan="4">主塔施工监测数据</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">名称</td>
+                        <td colspan="3">{{info.name}}</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">施工工序</td>
+                        <td colspan="3">{{tableInfo1.data1}}</td>
+                    </tr>
+                    <tr class="tr-header">
+                        <td colspan="4">沉降</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">编号</td>
+                        <td colspan="3">1</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right" style="width: 80px;">初始值</td>
+                        <td>{{tableInfo1.data4_1?tableInfo1.data4_1+'m':''}}</td>
+                        <td class="td-center" style="width: 80px;">实测值</td>
+                        <td>{{tableInfo1.data4_2?tableInfo1.data4_2+'m':''}}</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">沉降</td>
+                        <td colspan="3">{{tableInfo1.data4_1&&tableInfo1.data4_2?tableInfo1.data4_1-tableInfo1.data4_2+'m':''}}</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">编号</td>
+                        <td colspan="3">2</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right" style="width: 80px;">初始值</td>
+                        <td>{{tableInfo1.data5_1?tableInfo1.data5_1+'m':''}}</td>
+                        <td class="td-center" style="width: 80px;">实测值</td>
+                        <td>{{tableInfo1.data5_2?tableInfo1.data5_1+'m':''}}</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">沉降</td>
+                        <td colspan="3">{{tableInfo1.data5_1&&tableInfo1.data5_2?tableInfo1.data5_1-tableInfo1.data5_2+'m':''}}</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">编号</td>
+                        <td colspan="3">3</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right" style="width: 80px;">初始值</td>
+                        <td>{{tableInfo1.data6_1?tableInfo1.data6_1+'m':''}}</td>
+                        <td class="td-center" style="width: 80px;">实测值</td>
+                        <td>{{tableInfo1.data6_2?tableInfo1.data6_2+'m':''}}</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">沉降</td>
+                        <td colspan="3">{{tableInfo1.data6_1&&tableInfo1.data6_2?tableInfo1.data6_1-tableInfo1.data6_2+'m':''}}</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">编号</td>
+                        <td colspan="3">4</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right" style="width: 80px;">初始值</td>
+                        <td>{{tableInfo1.data7_1?tableInfo1.data7_1+'m':''}}</td>
+                        <td class="td-center" style="width: 80px;">实测值</td>
+                        <td>{{tableInfo1.data7_2?tableInfo1.data7_2+'m':''}}</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">沉降</td>
+                        <td colspan="3">{{tableInfo1.data7_1&&tableInfo1.data7_2?tableInfo1.data7_1-tableInfo1.data7_2+'m':''}}</td>
+                    </tr>
+
+                    <tr class="tr-header">
+                        <td colspan="4">应力</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">编号</td>
+                        <td>1</td>
+                        <td class="td-center">位置</td>
+                        <td>上缘</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">理论值</td>
+                        <td></td>
+                        <td class="td-center">实测值</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">差值</td>
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">编号</td>
+                        <td>2</td>
+                        <td class="td-center">位置</td>
+                        <td>上缘</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">理论值</td>
+                        <td></td>
+                        <td class="td-center">实测值</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">差值</td>
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">编号</td>
+                        <td>3</td>
+                        <td class="td-center">位置</td>
+                        <td>下缘</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">理论值</td>
+                        <td></td>
+                        <td class="td-center">实测值</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">差值</td>
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">编号</td>
+                        <td>4</td>
+                        <td class="td-center">位置</td>
+                        <td>下缘</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">理论值</td>
+                        <td></td>
+                        <td class="td-center">实测值</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">差值</td>
+                        <td colspan="3"></td>
+                    </tr>
+
+                    <tr class="tr-header">
+                        <td colspan="4">塔偏</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">编号</td>
+                        <td colspan="3">1</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">轴线偏位</td>
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">编号</td>
+                        <td colspan="3">2</td>
+                    </tr>
+                    <tr>
+                        <td class="td-right">轴线偏位</td>
+                        <td colspan="3"></td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script src="js/element-ui.js"></script>
+<script type='text/javascript' src='sdk/lbsdk.min.js'></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                searchForm: {
+                    position: '',
+                    name: ''
+                },
+                info: {},
+                tableInfo1: {},
+            }
+        },
+        mounted() {
+            this.currentPointId = localStorage.getItem("currentPointId");
+            this.loading();
+
+            //注册回调消息
+            initRecvdMsgCallback(funRecvdMsgCallBack, function(bRet) {
+                if (bRet === true) {}
+            });
+            // function initRecvdMsgCallback() {
+            //     try {
+            //         if (typeof contextObj !== "undefined") {
+            //             if (typeof setRecvdMsgCallBack !== "undefined") {
+            //                 //alert("setRecvdMsgCallBack");
+            //                 setRecvdMsgCallBack(funRecvdMsgCallBack);
+            //             } else {
+            //                 setTimeout(initRecvdMsgCallback, 500);
+            //             }
+            //         } else {
+            //             setTimeout(initRecvdMsgCallback, 500);
+            //         }
+            //     } catch (e) {
+            //         alert(e);
+            //     }
+            // }
+
+            function funRecvdMsgCallBack(commandName, eventInfo) {
+                //_this.$message.error(commandName+'----'+eventInfo);
+                //_this.$message.error(localStorage.getItem("currentPointId"));
+            }
+        },
+        methods: {
+            //测点信息初始化
+            loading() {
+                this.pointList = JSON.parse(localStorage.getItem("pointList"));
+                this.pointList.forEach(item => {
+                    if (item.id == this.currentPointId) {
+                        this.info = item;
+                        this.tableInfo1 = this.info.tableData1[0] ? this.info.tableData1[0] : {};
+                    }
+                });
+                //this.$message.error(this.currentPointId);
+            },
+        },
+    })
+</script>
+
+</html>

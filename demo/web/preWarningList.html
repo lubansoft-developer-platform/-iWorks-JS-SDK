@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>预消警列表</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/element-ui.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="main">
+            <div class="search-form">
+                <el-form :inline="true" :model="searchForm" class="demo-form-inline" size="mini">
+                    <el-form-item label="类型：">
+                        <el-select v-model="searchForm.position" placeholder="全选">
+                            <el-option label="区域一" value="shanghai"></el-option>
+                            <el-option label="区域二" value="beijing"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item style="float: right;">
+                        <el-input placeholder="请输入预消警名称等关键字" v-model="searchForm.name">
+                            <el-button slot="append" icon="el-icon-search"></el-button>
+                        </el-input>
+                    </el-form-item>
+                </el-form>
+            </div>
+
+            <div class="tabList">
+                <el-button icon="el-icon-plus" @click="addShow">新建预消警</el-button>
+                <el-button icon="el-icon-delete" @click="delWarning">删除预消警</el-button>
+                <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" :border="true" size="mini" style="width: 100%;margin-top: 10px;" @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" width="55" align="center">
+                    </el-table-column>
+                    <el-table-column type="index" :index="indexMethod" label="序号" width="100" align="center">
+                    </el-table-column>
+                    <el-table-column prop="data1" label="名称" sortable align="center">
+                        <template slot-scope="scope">
+                            <span @click="openFormList" style="color: blue;text-decoration: underline;cursor: pointer;">{{scope.row.data1}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="data4" label="预警类型" align="center">
+                    </el-table-column>
+                    <el-table-column prop="data5" label="预警级别" min-width="100" align="center">
+                    </el-table-column>
+                    <el-table-column prop="data7" label="发起日期" min-width="180" align="center">
+                    </el-table-column>
+                    <el-table-column label="编辑" align="center">
+                        <template slot-scope="scope"><i @click="openEditDiolag(scope.row)" class="el-icon-edit"></i></template>
+                    </el-table-column>
+                    <el-table-column prop="data8" label="审批状态" align="center">
+                        <template slot-scope="scope">未审批</template>
+                    </el-table-column>
+                    <el-table-column label="导出PDF" align="center">
+                        <template slot-scope="scope"><i class="el-icon-tickets"></i></template>
+                    </el-table-column>
+
+                </el-table>
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 30]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="tableData.length" style="text-align: right;margin-top: 10px;">
+                </el-pagination>
+            </div>
+
+        </div>
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script src="js/element-ui.js"></script>
+<script type='text/javascript' src='sdk/lbsdk.min.js'></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                searchForm: {
+                    position: '',
+                    name: ''
+                },
+                tableData: [],
+                multipleSelection: [],
+                currentPage: 1,
+                motorPosition: false,
+            }
+        },
+        mounted() {
+            //this.setLocalStorage();
+            //初始化本地预消警列表
+            if (localStorage.getItem("warningList")) {
+                this.tableData = JSON.parse(localStorage.getItem("warningList"));
+            } else {
+                this.setLocalStorage();
+            }
+            let _this = this;
+            initRecvdMsgCallback(funRecvdMsgCallBack, function(bRet) {
+                if (bRet === true) {}
+            });
+            // initRecvdMsgCallback();
+            // //注册回调消息
+            // function initRecvdMsgCallback() {
+            //     try {
+            //         if (typeof contextObj !== "undefined") {
+            //             if (typeof setRecvdMsgCallBack !== "undefined") {
+            //                 //alert("setRecvdMsgCallBack");
+            //                 setRecvdMsgCallBack(funRecvdMsgCallBack);
+            //             } else {
+            //                 setTimeout(initRecvdMsgCallback, 500);
+            //             }
+            //         } else {
+            //             setTimeout(initRecvdMsgCallback, 500);
+            //         }
+            //     } catch (e) {
+            //         alert(e);
+            //     }
+            // }
+
+            //接收窗口关闭信息并刷新页面
+            function funRecvdMsgCallBack(commandName, eventInfo) {
+                //_this.$message.error(commandName + '--***--' + eventInfo);
+                if (localStorage.getItem("warningList")) {
+                    _this.tableData = JSON.parse(localStorage.getItem("warningList"));
+                }
+            }
+        },
+        methods: {
+            //删除预消警
+            delWarning() {
+                let len = this.tableData.length;
+                let _this = this;
+                for (let i = len - 1; i >= 0; i--) {
+                    this.multipleSelection.forEach(function(item, key) {
+                        if (item.id == _this.tableData[i].id) {
+                            _this.tableData.splice(i, 1);
+                        }
+                    })
+                };
+                this.setLocalStorage();
+            },
+            //选中列
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            //分页
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+            },
+            //分页
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+            },
+            //打开预消警编辑弹框
+            openEditDiolag(row) {
+                localStorage.setItem("currentWarningId", row.id);
+                let url = '/HelloWorld/web/proWarningEdit.html';
+                let crViewParam = {
+                    dialogId: "p4",
+                    url: url,
+                    titleName: "预消警编辑",
+                    width: 800,
+                    height: 600,
+                    posLeft: 400,
+                    posTop: 100,
+                    bModalDialog: true,
+                    bShow: true,
+                };
+                ///< 打开对话框
+                createWebView(crViewParam, function() {});
+            },
+            //打开预消警新增弹框
+            addShow() {
+                let url = '/HelloWorld/web/preWarningAdd.html';
+                let crViewParam = {
+                    dialogId: "p2",
+                    url: url,
+                    titleName: "预消警添加",
+                    width: 800,
+                    height: 600,
+                    posLeft: 400,
+                    posTop: 100,
+                    bModalDialog: true,
+                    bShow: true,
+                };
+                ///< 打开对话框
+                createWebView(crViewParam, function() {});
+            },
+            //打开预消警表单列表弹框
+            openFormList() {
+                let url = '/HelloWorld/web/preWarningFormList.html';
+                let crViewParam = {
+                    dialogId: "p3",
+                    url: url,
+                    titleName: "表单列表",
+                    width: 800,
+                    height: 600,
+                    posLeft: 400,
+                    posTop: 100,
+                    bModalDialog: true,
+                    bShow: true,
+                };
+                ///< 打开对话框
+                createWebView(crViewParam, function() {});
+            },
+            //储存预消警信息到本地
+            setLocalStorage() {
+                let warningList = JSON.stringify(this.tableData);
+                localStorage.setItem("warningList", warningList);
+            },
+        },
+    })
+</script>
+
+</html>

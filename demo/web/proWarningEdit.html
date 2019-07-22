@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>新建预消警</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/element-ui.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="main">
+            <div style="max-height: 780px; overflow: auto;border: none;">
+                <el-form ref="form" :rules="addRules" :model="addForm" label-width="100px" size="mini">
+                    <el-form-item label="名称：" prop="data1">
+                        <el-input v-model="addForm.data1" maxlength="15" placeholder="最多输入15字"></el-input>
+                    </el-form-item>
+                    <el-form-item label="编号：" prop="data2">
+                        <el-input v-model="addForm.data2" maxlength="15" placeholder="最多输入15字"></el-input>
+                    </el-form-item>
+                    <el-form-item label="预警部位：" prop="data3">
+                        <el-select v-model="addForm.data3">
+                            <el-option label="主塔" value="1"></el-option>
+                            <el-option label="主梁" value="2"></el-option>
+                            <el-option label="斜拉索" value="3"></el-option>
+                            <el-option label="主墩" value="4"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="预警类型：" prop="data4">
+                        <el-select v-model="addForm.data4">
+                            <el-option label="沉降" value="沉降"></el-option>
+                            <el-option label="应力" value="应力"></el-option>
+                            <el-option label="塔偏" value="塔偏"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="预警级别：" prop="data5">
+                        <el-select v-model="addForm.data5">
+                            <el-option label="黄色" value="黄色"></el-option>
+                            <el-option label="红色" value="红色"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="选择测点：" prop="data6">
+                    </el-form-item>
+                    <div style="border: 1px solid #DCDFE6;margin-top: 10px;">
+                        <div style="border-bottom: 1px solid #DCDFE6;padding: 10px;">
+                            <i class="el-icon-d-arrow-right"></i> 引入测点
+                        </div>
+                        <div style="padding: 10px;height: 140px;overflow-y: auto;">
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">
+                                全选</el-checkbox>
+                            <el-checkbox-group v-model="checkeds" @change="handleCheckedCitiesChange">
+                                <el-checkbox v-for="item in pointList" :label="item.name" :key="item.name" style="display: block;margin-left: 10px;margin-top: 5px;">{{item.name}}
+                                </el-checkbox>
+                            </el-checkbox-group>
+                        </div>
+
+                    </div>
+                </el-form>
+                <div style="margin-top: 10px;text-align: center;">
+                    <el-button type="primary" @click="updateSubmit" size="mini">保 存</el-button>
+                    <el-button @click="updateCancel" size="mini">取 消</el-button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script src="js/element-ui.js"></script>
+<script src="js/api.js"></script>
+<script src="js/moment.min.js"></script>
+<script type='text/javascript' src='sdk/lbsdk.min.js'></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                searchForm: {
+                    position: '',
+                    name: ''
+                },
+                tableData: [{
+                    id: '1',
+                    name: 'aaaa',
+                    position: '主梁',
+                    updateTime: '2019/06/27 16:31:57',
+                }],
+                multipleSelection: [],
+                currentPage: 1,
+                addPointDialog: false,
+                addForm: {},
+                addFormOld: {},
+                addRules: {
+                    data1: [{
+                        required: true,
+                        message: '请输入名称',
+                        trigger: 'blur'
+                    }, ],
+                    data3: [{
+                        required: true,
+                        message: '请选择',
+                        trigger: 'change'
+                    }],
+                    data4: [{
+                        required: true,
+                        message: '请选择',
+                        trigger: 'change'
+                    }],
+                    data5: [{
+                        required: true,
+                        message: '请选择',
+                        trigger: 'change'
+                    }],
+                },
+                motorPosition: false,
+                pointList: [],
+                checkAll: false,
+                checkeds: [],
+                isIndeterminate: true,
+                warningList: [],
+                currentWarningId: '',
+
+            }
+        },
+        mounted() {
+            //初始化本地测点列表
+            if (localStorage.getItem("pointList")) {
+                this.pointList = JSON.parse(localStorage.getItem("pointList"));
+            }
+            this.loading();
+            let _this = this;
+            initRecvdMsgCallback(funRecvdMsgCallBack, function(bRet) {
+                if (bRet === true) {}
+            });
+            // initRecvdMsgCallback();
+            // //注册回调消息
+            // function initRecvdMsgCallback() {
+            //     try {
+            //         if (typeof contextObj !== "undefined") {
+            //             if (typeof setRecvdMsgCallBack !== "undefined") {
+            //                 //alert("setRecvdMsgCallBack");
+            //                 setRecvdMsgCallBack(funRecvdMsgCallBack);
+            //             } else {
+            //                 setTimeout(initRecvdMsgCallback, 500);
+            //             }
+            //         } else {
+            //             setTimeout(initRecvdMsgCallback, 500);
+            //         }
+            //     } catch (e) {
+            //         alert(e);
+            //     }
+            // }
+
+            function funRecvdMsgCallBack(commandName, eventInfo) {
+                //_this.$message.error(commandName+'----'+eventInfo);
+                //_this.$message.error(localStorage.getItem("currentPointId"));
+            }
+        },
+        methods: {
+            //根据预消警ID获取当前预消警信息
+            loading() {
+                this.currentWarningId = localStorage.getItem("currentWarningId");
+                this.warningList = JSON.parse(localStorage.getItem("warningList"));
+                this.warningList.forEach(item => {
+                    if (item.id == this.currentWarningId) {
+                        this.addForm = item;
+                        this.checkeds = item.checkeds;
+                    }
+                });
+                this.addFormOld = JSON.parse(JSON.stringify(this.addForm));
+                //this.$message.error(this.currentPointId);
+            },
+            //修改提交
+            updateSubmit() {
+                this.$refs['form'].validate((valid) => {
+                    if (valid) {
+                        this.addForm.checkeds = this.checkeds;
+                        this.warningList.forEach(item => {
+                            if (item.id == this.currentWarningId) {
+                                item = this.addForm
+                            }
+                        });
+                        localStorage.setItem("warningList", JSON.stringify(this.warningList));
+                        closeWebView("p4", function() {});
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            //修改取消
+            updateCancel() {
+                closeWebView("p4", function() {});
+            },
+            //全选
+            handleCheckAllChange(val) {
+                let newArr = [];
+                this.pointList.forEach(element => {
+                    newArr.push(element.name);
+                });
+                this.checkeds = val ? newArr : [];
+                this.isIndeterminate = false;
+            },
+            //选择测点
+            handleCheckedCitiesChange(value) {
+                let checkedCount = value.length;
+                this.checkAll = checkedCount === this.cities.length;
+                this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
+            }
+        },
+    })
+</script>
+
+</html>

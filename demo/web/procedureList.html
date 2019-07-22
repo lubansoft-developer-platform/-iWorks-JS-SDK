@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>施工工序管理</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/element-ui.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="main">
+            <div class="tabList" style="max-height: 780px; overflow: auto;border: none;">
+                <el-button icon="el-icon-plus" @click="addDialogShow">新增工序</el-button>
+                <el-button icon="el-icon-delete" @click="del">删除工序</el-button>
+                <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" :border="true" size="mini" style="width: 100%;margin-top: 10px;" @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" width="55" align="center">
+                    </el-table-column>
+                    <el-table-column type="index" :index="indexMethod" width="150" label="步骤" align="center">
+                    </el-table-column>
+                    <el-table-column prop="procedure" label="施工工序" align="center">
+                    </el-table-column>
+                </el-table>
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 30]" :page-size="20" layout="total, sizes, prev, pager, next, jumper" :total="tableData.length" style="text-align: right;margin-top: 10px;">
+                </el-pagination>
+            </div>
+            <div style="margin-top: 10px;text-align: center;">
+                <el-button type="primary" @click="submit" size="mini">保 存</el-button>
+                <el-button @click="cancel" size="mini">取 消</el-button>
+            </div>
+        </div>
+
+        <el-dialog title="输入工序名称" :visible.sync="addDialog" width="350px">
+            <el-form ref="form" :model="addForm" label-width="110px" size="mini">
+                <el-form-item label="输入施工工序：" prop="procedure">
+                    <el-input v-model="addForm.procedure" max="15"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="addDialogSubmit" size="mini">确 定</el-button>
+                    <el-button @click="addDialog = false" size="mini">取 消</el-button>
+                </span>
+        </el-dialog>
+    </div>
+</body>
+<script src="js/vue.js"></script>
+<script src="js/element-ui.js"></script>
+<script src="js/api.js"></script>
+<script type='text/javascript' src='sdk/lbsdk.min.js'></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function() {
+            return {
+                searchForm: {
+                    position: '',
+                    name: ''
+                },
+                tableData: [],
+                addDialog: false,
+                addForm: {
+                    procedure: ''
+                },
+                currentPage: 1,
+                multipleSelection: [],
+            }
+        },
+        mounted() {
+            //初始化本地工序序号列表
+            if (localStorage.getItem("procedureList")) {
+                this.tableData = JSON.parse(localStorage.getItem("procedureList"));
+            } else {
+                this.tableData = procedureList;
+            }
+            initRecvdMsgCallback(funRecvdMsgCallBack, function(bRet) {
+                if (bRet === true) {}
+            });
+            // initRecvdMsgCallback();
+            // //注册回调消息
+            // function initRecvdMsgCallback() {
+            //     try {
+            //         if (typeof contextObj !== "undefined") {
+            //             if (typeof setRecvdMsgCallBack !== "undefined") {
+            //                 //alert("setRecvdMsgCallBack");
+            //                 //setRecvdMsgCallBack(funRecvdMsgCallBack);
+            //             } else {
+            //                 setTimeout(initRecvdMsgCallback, 500);
+            //             }
+            //         } else {
+            //             setTimeout(initRecvdMsgCallback, 500);
+            //         }
+            //     } catch (e) {
+            //         alert(e);
+            //     }
+            // }
+        },
+        methods: {
+            //工序修改保存
+            submit() {
+                this.setLocalStorage();
+                closeWebView("g1", function() {});
+            },
+            //工序修改取消
+            cancel() {
+                closeWebView("g1", function() {});
+            },
+            //删除列
+            del() {
+                let len = this.tableData.length;
+                let _this = this;
+                for (let i = len - 1; i >= 0; i--) {
+                    this.multipleSelection.forEach(function(item, key) {
+                        if (item.procedure == _this.tableData[i].procedure) {
+                            _this.tableData.splice(i, 1);
+                        }
+                    })
+                };
+            },
+            //工序添加提交
+            addDialogSubmit() {
+                if (this.addForm.procedure == '') {
+                    this.$message.error('请填写工序');
+                    return false;
+                }
+                this.tableData.push(this.addForm);
+                this.setLocalStorage();
+                this.addDialog = false;
+            },
+            //工序添加弹窗显示
+            addDialogShow() {
+                this.addForm = {
+                    procedure: ''
+                };
+                this.addDialog = true;
+            },
+            //序号规则
+            indexMethod(index) {
+                return index + 1;
+            },
+            //选择列
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            //分页
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+            },
+            //分页
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+            },
+            //储存序号信息到本地
+            setLocalStorage() {
+                let procedureList2 = JSON.stringify(this.tableData);
+                localStorage.setItem("procedureList", procedureList2);
+            },
+            //刷新
+            refresh() {
+                location.reload();
+            },
+        },
+    })
+</script>
+
+</html>

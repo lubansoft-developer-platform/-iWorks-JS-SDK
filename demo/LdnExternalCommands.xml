@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MENU>
+	<TAB NAME="Demo测试">
+		<BLOCK NAME="第一个测试" JSPLUGIN="{6660DBD9-4EDA-47B5-9189-EDD62B420723}">
+			<BUTTON NAME="测点管理" TYPE="Button" PLUGIN="{6660DBD9-4EDA-47B5-9189-EDD62B420723}" USERGUID="GUID1" CMDNAME="测点管理" TIP="HelloWorld" IMAGE_LARGE="menupic\cost1.png" IMAGE_SMALL="" URL="web\html\index.html"/>
+			<BUTTON NAME="预消警管理" TYPE="Button" PLUGIN="{6660DBD9-4EDA-47B5-9189-EDD62B420723}" USERGUID="GUID2" CMDNAME="预消警管理" TIP="HelloWorld" IMAGE_LARGE="menupic\cost1.png" IMAGE_SMALL="" URL="web\html\index2.html"/>
+			<BUTTON NAME="工序管理" TYPE="Button" PLUGIN="{6660DBD9-4EDA-47B5-9189-EDD62B420723}" USERGUID="GUID3" CMDNAME="工序管理" TIP="HelloWorld" IMAGE_LARGE="menupic\cost1.png" IMAGE_SMALL="" URL="web\html\index3.html"/>
+		</BLOCK>
+	</TAB>
+</MENU>

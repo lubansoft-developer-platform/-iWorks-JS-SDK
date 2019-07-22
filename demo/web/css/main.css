@@ -1,0 +1,81 @@
+
+
+
+.el-table thead tr,.el-table thead th{
+    background-color: #F1F1F1;
+}
+.el-dialog__footer{
+    text-align: center;
+}
+.el-select{
+    width: 100%;
+}
+.el-select__tags {
+    white-space: nowrap;
+    overflow: hidden;
+    flex-wrap: nowrap;
+}
+html,body,#app{
+    background: #fff;
+}
+*{
+    font-size: 14px;
+}
+.color-red{
+    color: red;
+}
+.color-green{
+    color: green;
+}
+.main{
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.tabList{
+    border: 1px solid #DCDFE6;
+    padding: 10px 1px;
+}
+.tabList .el-button{
+    border: none;
+}
+.edit-1{
+    border: 1px solid #DCDFE6;
+    padding: 10px;
+}
+.edit-1-header{
+    height: 35px;
+    line-height: 35px;
+}
+.edit-1-body{
+    border: 1px solid #DCDFE6;
+    padding: 20px 10px;
+    line-height: 30px;
+}
+.edit-2{
+    border: 1px solid #DCDFE6;
+    padding: 10px;
+}
+.infoTable{
+    border-right:1px solid #DCDFE6;
+    border-bottom:1px solid #DCDFE6;
+    width: 100%;
+}
+.infoTable td{
+    border-left:1px solid #DCDFE6;
+    border-top:1px solid #DCDFE6;
+    padding: 5px 10px;
+}
+.infoTable .tr-header{
+    background-color: #F1F1F1;
+}
+.td-right{
+    text-align: right;
+}
+.td-center{
+    text-align: center;
+}
+
+
+
+

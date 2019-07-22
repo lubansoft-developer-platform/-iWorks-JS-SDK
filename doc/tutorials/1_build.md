@@ -1,5 +1,3 @@
-# iWorks-JS-SDK
-
 ### 目录结构
 
 ```
@@ -90,16 +88,11 @@ iWorks JS SDK离线版接口文档入口文件
 |    |    |
 |    |    \
 |    |
-|    |----/sdk
-|    |    |
-|    |    \
-|    |
 |    \
 |
 \
 3. 运行iWorks.exe
 ```
 
-### iWorks客户端下载地址
-[下载地址](https://pan.baidu.com/s/1zxgJxpuAEkLU73xWEge5Pg )
-提取码:krvg
+
+

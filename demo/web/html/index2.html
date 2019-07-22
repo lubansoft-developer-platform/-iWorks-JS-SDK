@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="../../../jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <script type='text/javascript' src='../sdk/lbsdk.min.js'></script>
+</head>
+
+<body>
+    <script language="javascript">
+        // // var intervalCallback = setInterval(() => {
+        // //     initRecvdMsgCallback();
+        // //     clearInterval(intervalCallback);
+        // // }, 2000);
+        // initRecvdMsgCallback();
+        // //showWebView("k2",true,function(){});
+
+        // //注册回调消息
+        // function initRecvdMsgCallback() {
+        //     try {
+        //         if (typeof contextObj !== "undefined") {
+        //             if (typeof setRecvdMsgCallBack !== "undefined") {
+        //                 //alert("setRecvdMsgCallBack");
+        //                 setRecvdMsgCallBack(funRecvdMsgCallBack);
+        //                 openUrl();
+        //             } else {
+        //                 setTimeout(initRecvdMsgCallback, 500);
+        //             }
+        //         } else {
+        //             setTimeout(initRecvdMsgCallback, 500);
+        //         }
+        //     } catch (e) {
+        //         alert(e);
+        //     }
+        // }
+        initRecvdMsgCallback(funRecvdMsgCallBack, function(bRet) {
+            if (bRet === true) {
+                openUrl();
+            }
+        });
+
+
+        function funRecvdMsgCallBack(commandName, eventInfo) {
+            if (commandName.indexOf("预消警管理") > -1) {
+                if (eventInfo === "") {
+                    openUrl();
+                }
+            } else if (eventInfo !== "") {
+                let info = JSON.parse(eventInfo);
+                if (EEventType.TOKENAPPLY == info.EventType) {
+                    initToken2("8c249675aea6c3cbd91661bbae767ff1", "b22e3fef491185e75fb125b80fa05e66", function(rInfo) {
+                        let tokenRet = JSON.parse(rInfo);
+                        if (!tokenRet.ret) {
+                            alert(tokenRet.msg);
+                        }
+                    });
+                }
+            }
+        };
+
+        function openUrl() {
+            setSystemMode(ESystemMode.DebugMode);
+            let url = '/HelloWorld/web/preWarningList.html';
+            let crViewParam = {
+                dialogId: "p1",
+                url: url,
+                titleName: "预消警管理",
+                width: 1000,
+                height: 800,
+                posLeft: 10,
+                posTop: 165,
+                bModalDialog: true,
+                bShow: true,
+            };
+
+            ///< 打开对话框
+            createWebView(crViewParam, createWebViewCallBack);
+        }
+
+
+        function createWebViewCallBack(retId, bRet) {
+            //alert("k3444444");
+            //alert(retId);
+            //alert(bRet);
+        }
+    </script>
+
+</body>
+
+</html>

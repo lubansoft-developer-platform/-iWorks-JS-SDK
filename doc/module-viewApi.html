@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Module: viewApi | iWorks JS SDK</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="width: 156px; height: 36px">
+        
+            <img src="./logo.png" width="100%" height="100%">
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">iWorks JS SDK</a></h1>
+        
+            <span class="version">v1.0</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+        <ol class="lnb-tab">
+            <li id="api-tab">
+                <a href="#"><h4>API</h4></a>
+            </li>
+            <li id="examples-tab">
+                <a href="#"><h4>Help</h4></a>
+            </li>
+        </ol>
+    
+    <div class="lnb-examples hidden"><h3>Help</h3><ul><li><a href="tutorial-1_build.html">环境搭建</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="1_build_sub"></div></li><li><a href="tutorial-2_guide.html">操作指南</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="2_guide_sub"></div></li><li><a href="tutorial-3_debug.html">调试</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="3_debug_sub"></div></li></ul></div><div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-attributeApi.html">attributeApi</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:attributeApi_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-attributeApi.html#~getAllAttribute">getAllAttribute</a></li><li><a href="module-attributeApi.html#~getAllAttributeInfo">getAllAttributeInfo</a></li><li><a href="module-attributeApi.html#~getAttributeInfo">getAttributeInfo</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-attributeApi.html#~getAllAttributeCallback">getAllAttributeCallback</a></li><li><a href="module-attributeApi.html#~getAllAttributeInfoCallback">getAllAttributeInfoCallback</a></li><li><a href="module-attributeApi.html#~getAttributeInfoCallback">getAttributeInfoCallback</a></li></ul></div></li><li><a href="module-configApi.html">configApi</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:configApi_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-configApi.html#~ESystemMode">ESystemMode</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-configApi.html#~setSystemMode">setSystemMode</a></li></ul></div></li><li><a href="module-constructionSectionApi.html">constructionSectionApi</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:constructionSectionApi_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-constructionSectionApi.html#~getAllConstructionSection">getAllConstructionSection</a></li><li><a href="module-constructionSectionApi.html#~getAllConstructionSectionInfo">getAllConstructionSectionInfo</a></li><li><a href="module-constructionSectionApi.html#~getConstructionSectionInfo">getConstructionSectionInfo</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-constructionSectionApi.html#~getAllConstructionSectionCallback">getAllConstructionSectionCallback</a></li><li><a href="module-constructionSectionApi.html#~getAllConstructionSectionInfoCallback">getAllConstructionSectionInfoCallback</a></li><li><a href="module-constructionSectionApi.html#~getConstructionSectionInfoCallback">getConstructionSectionInfoCallback</a></li></ul></div></li><li><a href="module-contextApi.html">contextApi</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:contextApi_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-contextApi.html#.EEventType">EEventType</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-contextApi.html#.initRecvdMsgCallback">initRecvdMsgCallback</a></li><li><a href="module-contextApi.html#.removeRecvdMsgCallBack">removeRecvdMsgCallBack</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-contextApi.html#~onRecvdMsgCallBack">onRecvdMsgCallBack</a></li></ul></div></li><li><a href="module-docUDLoadApi.html">docUDLoadApi</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:docUDLoadApi_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-docUDLoadApi.html#.EDocUDLoadType">EDocUDLoadType</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-docUDLoadApi.html#~uploadFile">uploadFile</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-docUDLoadApi.html#~uploadFileCallback">uploadFileCallback</a></li></ul></div></li><li><a href="module-elementApi.html">elementApi</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:elementApi_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-elementApi.html#~getAllElement">getAllElement</a></li><li><a href="module-elementApi.html#~getAllElementInfo">getAllElementInfo</a></li><li><a href="module-elementApi.html#~getAttributeInfo">getAttributeInfo</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-elementApi.html#~getAllElementCallback">getAllElementCallback</a></li><li><a href="module-elementApi.html#~getAllElementInfoCallback">getAllElementInfoCallback</a></li><li><a href="module-elementApi.html#~getAttributeInfoCallback">getAttributeInfoCallback</a></li></ul></div></li><li><a href="module-floorApi.html">floorApi</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:floorApi_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-floorApi.html#~getAllFloor">getAllFloor</a></li><li><a href="module-floorApi.html#~getFloorAttribute">getFloorAttribute</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-floorApi.html#~getAllFloorCallback">getAllFloorCallback</a></li><li><a href="module-floorApi.html#~getFloorAttributeCallback">getFloorAttributeCallback</a></li></ul></div></li><li><a href="module-operateApi.html">operateApi</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:operateApi_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-operateApi.html#~captureViewPoint">captureViewPoint</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-operateApi.html#~captureViewPointCallback">captureViewPointCallback</a></li></ul></div></li><li><a href="module-pinApi.html">pinApi</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:pinApi_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-pinApi.html#.addPin">addPin</a></li><li><a href="module-pinApi.html#.delPin">delPin</a></li><li><a href="module-pinApi.html#.getAllPinInfo">getAllPinInfo</a></li><li><a href="module-pinApi.html#.getPinInfo">getPinInfo</a></li><li><a href="module-pinApi.html#.setPinHighLight">setPinHighLight</a></li><li><a href="module-pinApi.html#.setPinImagePath">setPinImagePath</a></li><li><a href="module-pinApi.html#.setPinVisible">setPinVisible</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-pinApi.html#~addPinCallback">addPinCallback</a></li><li><a href="module-pinApi.html#~delPinCallback">delPinCallback</a></li><li><a href="module-pinApi.html#~getAllPinInfoCallback">getAllPinInfoCallback</a></li><li><a href="module-pinApi.html#~getPinInfoCallback">getPinInfoCallback</a></li><li><a href="module-pinApi.html#~setPinHighLightCallback">setPinHighLightCallback</a></li><li><a href="module-pinApi.html#~setPinVisibleCallback">setPinVisibleCallback</a></li></ul></div></li><li><a href="module-projectInfoApi.html">projectInfoApi</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:projectInfoApi_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-projectInfoApi.html#.EProjectModelType">EProjectModelType</a></li><li><a href="module-projectInfoApi.html#.EProjectType">EProjectType</a></li></ul><div class="member-type">Methods</div><ul class="inner"><li><a href="module-projectInfoApi.html#.getDeptID">getDeptID</a></li><li><a href="module-projectInfoApi.html#.getPID">getPID</a></li><li><a href="module-projectInfoApi.html#.getProjectInfo">getProjectInfo</a></li><li><a href="module-projectInfoApi.html#.getProjectModelType">getProjectModelType</a></li><li><a href="module-projectInfoApi.html#.getProjectName">getProjectName</a></li><li><a href="module-projectInfoApi.html#.getProjectType">getProjectType</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-projectInfoApi.html#~getDeptIDCallback">getDeptIDCallback</a></li><li><a href="module-projectInfoApi.html#~getPIDCallback">getPIDCallback</a></li><li><a href="module-projectInfoApi.html#~getProjectInfoCallback">getProjectInfoCallback</a></li><li><a href="module-projectInfoApi.html#~getProjectModelTypeCallback">getProjectModelTypeCallback</a></li><li><a href="module-projectInfoApi.html#~getProjectNameCallback">getProjectNameCallback</a></li><li><a href="module-projectInfoApi.html#~getProjectTypeCallback">getProjectTypeCallback</a></li></ul></div></li><li><a href="module-tokenApi.html">tokenApi</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:tokenApi_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-tokenApi.html#~initToken1">initToken1</a></li><li><a href="module-tokenApi.html#~initToken2">initToken2</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-tokenApi.html#~initTokenCallback">initTokenCallback</a></li></ul></div></li><li><a href="module-viewApi.html">viewApi</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:viewApi_sub"><div class="member-type">Methods</div><ul class="inner"><li><a href="module-viewApi.html#~closeWebView">closeWebView</a></li><li><a href="module-viewApi.html#~createWebView">createWebView</a></li><li><a href="module-viewApi.html#~showWebView">showWebView</a></li></ul><div class="member-type">Typedef</div><ul class="inner"><li><a href="module-viewApi.html#~closeWebViewCallback">closeWebViewCallback</a></li><li><a href="module-viewApi.html#~createWebViewCallback">createWebViewCallback</a></li><li><a href="module-viewApi.html#~showWebViewCallback">showWebViewCallback</a></li></ul></div></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>viewApi</h2>
+        
+            
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+                <div class="description"><p>界面相关API</p></div>
+            
+
+            
+                
+
+<dt>
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+                
+
+<dt>
+    
+        <h4 class="name" id="~closeWebView">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>closeWebView<span class="signature">(dialogId, funcRet)</span><span class="type-signature"></span>
+                
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>关闭对话框</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dialogId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>createWebView传入的dialogId</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>funcRet</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">closeWebViewCallback</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~createWebView">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>createWebView<span class="signature">(param, funcRet)</span><span class="type-signature"></span>
+                
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>创建窗口</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>param</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">JSON</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>格式如下<br>
+{<br>
+dialogId: string,      //对话框Id<br>
+url: string,           //页面url<br>
+titleName: string,     //对话框标题<br>
+width: number,         //对话框宽度<br>
+height: number,        //对话框高度<br>
+posLeft: number,       //对话框左上位置.x<br>
+posTop: number,        //对话框左上位置.y<br>
+bModalDialog: boolean, //模态(true)/非模态(false)对话框<br>
+bShow: boolean,        //显示(true)/隐藏(false)对话框<br>
+}</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>funcRet</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">createWebViewCallback</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~showWebView">
+            
+                <span class="type-signature"><span class="icon green">inner</span> </span>showWebView<span class="signature">(dialogId, bShow, funcRet)</span><span class="type-signature"></span>
+                
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>显示/隐藏对话框</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dialogId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>createWebView中的dialogId</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>bShow</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>显示(true)/隐藏(false)页面</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>funcRet</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">showWebViewCallback</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            </dl>
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        <dl>
+                
+
+<dt>
+    
+        <h4 class="name" id="~closeWebViewCallback">
+            
+                <span class="type-signature"></span>closeWebViewCallback<span class="signature">(dialogId, returnValue)</span><span class="type-signature"></span>
+                
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>closeWebView回调函数</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dialogId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>对话框id</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>returnValue</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>操作结果</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~createWebViewCallback">
+            
+                <span class="type-signature"></span>createWebViewCallback<span class="signature">(dialogId, returnValue)</span><span class="type-signature"></span>
+                
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>createWebView回调函数</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dialogId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>对话框id</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>returnValue</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>操作结果</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="~showWebViewCallback">
+            
+                <span class="type-signature"></span>showWebViewCallback<span class="signature">(dialogId, returnValue)</span><span class="type-signature"></span>
+                
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>showWebView回调函数</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dialogId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>对话框id</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>returnValue</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>操作结果</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            </dl>
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="./logo.png" style="width: 156px; height: 36px">
+    <div class="footer-text"> </div>
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = 'module:viewApi_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>
