@@ -101,5 +101,4 @@ iWorks JS SDK离线版接口文档入口文件
 ```
 
 ### iWorks客户端下载地址
-[下载地址](https://pan.baidu.com/s/1zxgJxpuAEkLU73xWEge5Pg )
-提取码:krvg
+[下载地址](http://ziyuan.lubanu.com/iworksList.php?fid=122)
